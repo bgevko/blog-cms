@@ -34,19 +34,21 @@ GIT_URL=https://github.com/yourgithub/your_blog_backup_repo.git
 - `GIT_URL`: Set up a repo for an additional source of backup for your markdown files. 
 
 ### Example.md
+Each markdown article must have a `preview` and a `tags` attribute, placed between two `---` at the very top of the markdown file. `relatedArticles` is an optional parameter, but if you use it, the titles that you set here must match one of the file names (article titles) in the local directory, or the program will throw an error. 
 ```md
 ---
 preview: This is a preview of the article. It can be as short or as long as you want. The purpose of this block of text is to give the reader a preview of article contents.
 tags:
   - Markdown
   - Example
+relatedArticles:
+  - ValidTitle1
+  - ValidTitle2
 ---
 
 # Main Content
-The main content goes here
+Your article content
 ```
-
-Each markdown article must have a `preview` and a `tags` attribute, placed between two `---` at the very top of the markdown file.
 
 ### Assumed Backend Endpoints (crud.py)
 **get_articles()**: `GET API_URL/blog`
@@ -56,7 +58,7 @@ Each markdown article must have a `preview` and a `tags` attribute, placed betwe
 
 ### Assumed Article Structure (Can be changed in **crud.py** and **parse_md.py** )
 
-```Python
+```python
  data = response.json()
     articles = []
 
@@ -67,9 +69,9 @@ Each markdown article must have a `preview` and a `tags` attribute, placed betwe
             'editDate': article['editDate'],
             'preview': article['preview'],
             'content': article['content'],
-            'tags': article['tags']
+            'tags': article['tags'],
+            'relatedArticles': article['relatedArticles']
         })
-
 ```
 
 #### Mangoose Schema I used:
@@ -83,6 +85,7 @@ const articleSchema = mongoose.Schema({
   tags:           { type: [String], required: true, set: tags => [...new Set(tags)] },
   readTime:       { type: Number, default: 1},
   relativePath:   { type: String, required: true },
+  relatedArticles: { type: [String], required: true},
 });
 ```
 
@@ -107,6 +110,11 @@ python3 blog.py sync
 python3 blog.py backup
 ```
 
+- The force update command will delete everything in the database and replace it with the contents of the local directory. This is mostly for testing and troubleshooting; You should use `sync()` in most cases.
+```python
+python3 blog.py backup
+```
+
 ### (Optional but recommended) Make this script available from anywhere in the terminal
 You can create a system link and call this script from anywhere in the terminal:
 - From the directory of the file, link it to `/usr/local/bin/blog:
@@ -123,4 +131,5 @@ You can create a system link and call this script from anywhere in the terminal:
 blog list
 blog sync
 blog update
+blog force-update
 ```

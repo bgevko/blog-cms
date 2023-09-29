@@ -30,7 +30,8 @@ def get_articles():
             'editDate': article['editDate'],
             'preview': article['preview'],
             'content': article['content'],
-            'tags': article['tags']
+            'tags': article['tags'],
+            'relatedArticles': article['relatedArticles']
         })
 
     if len(articles) == 0:

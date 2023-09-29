@@ -28,6 +28,5 @@ def sync():
 
     for article in to_update:
         update_article(article['title'], article)
-        console.print(f"Updated {article['title']}", style="green")
 
     console.print("Sync complete.", style="bold cyan")

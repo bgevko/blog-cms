@@ -16,6 +16,9 @@ if not MD_DIR:
 def parse_articles():
     console.print("Parsing articles from local directory...", style="yellow")
     articles = []
+    titles = set()
+    related_titles = set()
+
     for md_file in os.listdir(MD_DIR):
         if md_file.endswith('.md'):
             with open(os.path.join(MD_DIR, md_file), 'r', encoding='utf-8') as f:
@@ -25,6 +28,7 @@ def parse_articles():
             preview = post.metadata.get('preview', '')
             content = post.content
             tags = post.metadata.get('tags', [])
+            relatedArticles = post.metadata.get('relatedArticles', [])
 
             # Created date
             publishDate = datetime.fromtimestamp(
@@ -53,15 +57,27 @@ def parse_articles():
                 'editDate': editDate,
                 'preview': preview,
                 'content': content,
-                'tags': tags
+                'tags': tags,
+                'relatedArticles': relatedArticles
             }
 
+            # Collect titles and related article titles (for validation)
             articles.append(article)
+            titles.add(title)
+
+            for relatedArticle in relatedArticles:
+                related_titles.add(relatedArticle)
 
     if len(articles) == 0:
         console.print("No articles found in local directory.", style="bold red")
     else:
         console.print(f"Found {len(articles)} articles in local directory.", style="green")
+
+    # Make sure all related articles exist
+    for relatedArticle in related_titles:
+        if relatedArticle not in titles:
+            raise Exception(f"Related article {relatedArticle} does not match any existing article title. Please check your metadata.")
+
     return articles
 
 
