@@ -21,14 +21,36 @@ def parse_articles():
 
     for md_file in os.listdir(MD_DIR):
         if md_file.endswith('.md'):
-            with open(os.path.join(MD_DIR, md_file), 'r', encoding='utf-8') as f:
-                post = frontmatter.load(f)
+            try:
+                with open(os.path.join(MD_DIR, md_file), 'r', encoding='utf-8') as f:
+                    post = frontmatter.load(f)
+            except Exception as e:
+                raise Exception(f"Error parsing {md_file}: {e}")
 
-            title = os.path.splitext(md_file)[0]
-            preview = post.metadata.get('preview', '')
-            content = post.content
-            tags = post.metadata.get('tags', [])
-            relatedArticles = post.metadata.get('relatedArticles', [])
+            try:
+                title = os.path.splitext(md_file)[0]
+            except Exception as e:
+                raise Exception(f"Error parsing {md_file}: {e}")
+
+            try:
+                preview = post.metadata.get('preview', '')
+            except Exception as e:
+                raise Exception(f"Error parsing {md_file}: {e}")
+
+            try:
+                content = post.content
+            except Exception as e:
+                raise Exception(f"Error parsing {md_file}: {e}")
+
+            try:
+                tags = post.metadata.get('tags', [])
+            except Exception as e:
+                raise Exception(f"Error parsing {md_file}: {e}")
+
+            try:
+                relatedArticles = post.metadata.get('relatedArticles', [])
+            except Exception as e:
+                raise Exception(f"Error parsing {md_file}: {e}")
 
             # Created date
             publishDate = datetime.fromtimestamp(
