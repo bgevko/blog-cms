@@ -8,25 +8,44 @@ from commands.backup import backup
 console = Console()
 
 def sync():
-    backup()
+    # backup()
     local_articles = parse_articles()
-    server_articles = get_articles()
 
+    # Split local articles into three lists, blog, projects, and notes, based on the 'type' key
+    local_articles = {
+        'blog': [article for article in local_articles if article['type'] == 'blog'],
+        'projects': [article for article in local_articles if article['type'] == 'projects'],
+        'notes': [article for article in local_articles if article['type'] == 'notes']
+    }
+    console.print('Retrieving server articles...', style="yellow")
+    server_articles = {
+        'blog': get_articles('blog'),
+        'projects': get_articles('projects'),
+        'notes': get_articles('notes')
+    }
+    print("")
+    sync_lists('blog', local_articles['blog'], server_articles['blog'])
+    sync_lists('projects', local_articles['projects'], server_articles['projects'])
+    sync_lists('notes', local_articles['notes'], server_articles['notes'])
+    print("")
+    console.print("Done!", style="bold green")
+
+def sync_lists(type, local_articles, server_articles):
     to_add, to_remove, to_update = compare(local_articles, server_articles)
 
+    console.print(f"{type} ------------------------------------", style="bold cyan")
     if len(to_add) == 0 and len(to_remove) == 0 and len(to_update) == 0:
-        console.print("No changes detected.", style="bold cyan")
+        console.print("No changes..\n", style="bold green")
         return
 
+    console.print(f"{len(to_add)} articles to add, {len(to_remove)} articles to remove, and {len(to_update)} articles to update.", style="yellow")
     for article in to_add:
-        add_article(article)
-        console.print(f"Added {article['title']}", style="green")
+        add_article(article, type)
 
     for article in to_remove:
-        remove_article(article['title'])
-        console.print(f"Removed {article['title']}", style="red")
+        remove_article(article['slug'], type)
 
     for article in to_update:
-        update_article(article['title'], article)
+        update_article(article['slug'], article, type)
 
-    console.print("Sync complete.", style="bold cyan")
+    print("")

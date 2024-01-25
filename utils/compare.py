@@ -8,24 +8,24 @@ def compare(local, server):
     to_add, to_remove, to_update = [], [], []
 
     # Create sets of article titles
-    local_titles = {article['title'] for article in local}
-    server_titles = {article['title'] for article in server}
+    local_titles = {article['slug'] for article in local}
+    server_titles = {article['slug'] for article in server}
 
     # Determine articles to add or remove using set differences
     to_add_titles = local_titles - server_titles
     to_remove_titles = server_titles - local_titles
 
     # Create lists of articles to add or remove
-    to_add = [article for article in local if article['title'] in to_add_titles]
-    to_remove = [article for article in server if article['title'] in to_remove_titles]
+    to_add = [article for article in local if article['slug'] in to_add_titles]
+    to_remove = [article for article in server if article['slug'] in to_remove_titles]
 
     # Create dict of server articles for easy access
-    server_dict = {article['title']: article for article in server}
+    server_dict = {article['slug']: article for article in server}
 
     # Determine articles to update
     for article in local:
-        server_article = server_dict.get(article['title'], None)
-        if server_article and article['editDate'] > server_article['editDate']:
+        server_article = server_dict.get(article['slug'], None)
+        if server_article and article['content'] != server_article['content']:
             to_update.append(article)
 
     return to_add, to_remove, to_update

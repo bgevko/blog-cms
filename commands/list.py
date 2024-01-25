@@ -1,14 +1,14 @@
 from utils.crud import get_articles
 
 def list():
-    articles = get_articles()
+    articles = get_articles('blog')
 
     for article in articles:
-        title = article['title']
-        date = article['editDate'].split('T')
-        daymonthyear = date[0].split('-')
-        time = date[1].split('.')[0]
+        postID = article['postID']
+        content = article['content']
+        slug = article['slug']
 
-        print( f"{title} | {daymonthyear[2]}/{daymonthyear[1]}/{daymonthyear[0]} | {time}")  # noqa: E501
+        print( f"PostID: {postID} | slug: {slug}")  # noqa: E501
+        print( f"Content: ------------------------------------\n{content}\n")  # noqa: E501
 
 
