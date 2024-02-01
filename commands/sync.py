@@ -8,7 +8,7 @@ from commands.backup import backup
 console = Console()
 
 def sync():
-    # backup()
+    backup()
     local_articles = parse_articles()
 
     # Split local articles into three lists, blog, projects, and notes, based on the 'type' key

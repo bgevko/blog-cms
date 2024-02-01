@@ -7,7 +7,7 @@ load_dotenv()
 console = Console()
 
 # Path to the repository
-path = os.getenv('MD_DIR')
+path = os.getenv('GIT_LOCAL_DIR')
 git_url = os.getenv('GIT_URL')
 
 
@@ -16,7 +16,7 @@ def backup():
 
     try:
         # Commit message
-        msg = 'Routine backup.'
+        msg = 'Content: Automated backup'
 
         # Create Repo object
         repo = Repo(path)
