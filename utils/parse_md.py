@@ -1,4 +1,5 @@
 import os
+import frontmatter
 from dotenv import load_dotenv
 from rich.console import Console
 
@@ -38,12 +39,17 @@ def parse_articles_from(path):
             except Exception as e:
                 raise Exception(f"Error parsing {md_file}: {e}")
 
+            try:
+                title = frontmatter.loads(content).metadata.get('title')
+            except Exception as e:
+                raise Exception(f"Error parsing {md_file}: {e}")
+
             article = {
                 'type': article_type,
                 'slug': slug,
                 'content': content,
+                'title': title
             }
-
             articles.append(article)
 
     if len(articles) == 0:

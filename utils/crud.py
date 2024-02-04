@@ -33,7 +33,8 @@ def get_articles(type):
         articles.append({
             'postID': article['postID'],
             'content': article['content'],
-            'slug': article['slug']
+            'slug': article['slug'],
+            'title': article['title'] if article['title'] else "",
         })
 
     if len(articles) == 0:

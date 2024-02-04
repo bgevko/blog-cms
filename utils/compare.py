@@ -25,7 +25,6 @@ def compare(local, server):
     # Determine articles to update
     for article in local:
         server_article = server_dict.get(article['slug'], None)
-        if server_article and article['content'] != server_article['content']:
+        if server_article and (article['content'] != server_article['content'] or article['title'] != server_article['title']):
             to_update.append(article)
-
     return to_add, to_remove, to_update
