@@ -6,7 +6,7 @@ def set_env(mode):
         sys.exit(1)
 
     # Open the .env file and read the contents
-    with open('.env', 'r') as file:
+    with open('/Users/bgevko/Projects/blog-sync/.env', 'r') as file:
         lines = file.readlines()
 
     # Find the line that starts with MODE=
@@ -16,7 +16,7 @@ def set_env(mode):
             break
 
     # Write the new contents to the .env file
-    with open('.env', 'w') as file:
+    with open('/Users/bgevko/Projects/blog-sync/.env', 'w') as file:
         file.writelines(lines)
         
 

@@ -41,14 +41,18 @@ def parse_articles_from(path):
 
             try:
                 title = frontmatter.loads(content).metadata.get('title')
+                draft = frontmatter.loads(content).metadata.get('draft')
             except Exception as e:
                 raise Exception(f"Error parsing {md_file}: {e}")
 
+            # Convert draft to int
+            draft = 1 if draft is True else 0
             article = {
                 'type': article_type,
                 'slug': slug,
                 'content': content,
-                'title': title
+                'title': title,
+                'draft': draft
             }
             articles.append(article)
 
