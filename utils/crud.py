@@ -43,21 +43,26 @@ def get_articles(type):
         console.print(f"Found {len(articles)} {type} articles.", style="green")
     return articles
 
-def add_article(article, type):
+def add_article(article, type, mute=0):
+    article['muteActivity'] = mute
     response = requests.post(API_URL + f"/api/{type}", json=article, headers=headers)
     if response.status_code == 200:
         console.print(f"Added article. Status code: {response.status_code} for add_article({article['slug']}),", style="bold green")
     else:
         console.print(f"Could not add article. Status code: {response.status_code} for add_article({article['slug']}),", style="bold red")
 
-def remove_article(slug, type):
-    response = requests.delete(API_URL + f"/api/{type}/" + quote(slug), headers=headers)
+def remove_article(slug, type, mute=0):
+    jsonObj = {
+        'muteActivity': mute
+    }
+    response = requests.delete(API_URL + f"/api/{type}/" + quote(slug), json=jsonObj, headers=headers)
     if response.status_code == 200:
         console.print(f"Removed article. Status code: {response.status_code} for remove_article({slug}),", style="bold green")
     else:
         console.print(f"Could not remove article. Status code: {response.status_code} for remove_article({slug}),", style="bold red")
 
-def update_article(slug, article, type):
+def update_article(slug, article, type, mute=0):
+    article['muteActivity'] = mute
     response = requests.put(API_URL + f"/api/{type}/" + quote(slug), json=article, headers=headers)
     if response.status_code == 200:
         console.print(f"Updated article. Status code: {response.status_code} for update_article({slug}),", style="bold green")

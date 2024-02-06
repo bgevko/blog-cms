@@ -12,7 +12,10 @@ def main():
     args = vars(parser.parse_args())
 
     if args['command'] == 'sync':
-        sync()
+        if args['mute']:
+            sync(mute=1)
+        else:
+            sync()
     elif args['command'] == 'backup':
         backup()
     elif args['command'] == 'list':
