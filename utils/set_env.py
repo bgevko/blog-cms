@@ -18,6 +18,18 @@ def set_env(mode):
     # Write the new contents to the .env file
     with open('/Users/bgevko/Projects/blog-sync/.env', 'w') as file:
         file.writelines(lines)
-        
+
+
+    #Change the mode for weblog as well
+    with open('/Users/bgevko/Projects/weblog/.env', 'r') as file:
+        lines = file.readlines()
+
+    for i, line in enumerate(lines):
+        if line.startswith('ENV='):
+            lines[i] = f'ENV={mode}\n'
+            break
+
+    with open('/Users/bgevko/Projects/weblog/.env', 'w') as file:
+        file.writelines(lines)
 
     print(f"Mode set to {mode}.")
